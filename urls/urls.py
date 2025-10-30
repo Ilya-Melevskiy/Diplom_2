@@ -1,0 +1,7 @@
+BASE_URL = 'https://stellarburgers.education-services.ru'
+CREATE_USER = f'{BASE_URL}/api/auth/register'
+DEL_USER = f'{BASE_URL}//api/auth/user'
+LOGIN_USER = f'{BASE_URL}/api/auth/login'
+CHANGE_USER = f'{BASE_URL}/api/auth/user'
+CREATE_ORDER = f'{BASE_URL}/api/orders'
+GET_ORDERS_USER = f'{BASE_URL}/api/orders'
