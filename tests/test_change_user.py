@@ -16,64 +16,12 @@ class TestChangeUser:
         ],
         ids=['email', 'name', 'password'],
     )
-    def test_change_user_auth_user_change_field_return_200(
+    def test_success_change_user_for_auth_user(
         self, login_user, field, new_value, request
     ):
         allure.dynamic.title(
             f'Изменение пользователя - для авторизованного пользователя '
-            f'изменение поля {request.node.callspec.id} возвращает 200'
-        )
-        payload = {field: new_value}
-        response = requests.patch(
-            CHANGE_USER,
-            json=payload,
-            headers={'Authorization': login_user['response'].json()['accessToken']},
-        )
-
-        assert response.status_code == 200
-
-
-    @pytest.mark.parametrize(
-        'field, new_value',
-        [
-            ('email', data.user_data_new_email),
-            ('name', data.user_data_new_name),
-            ('password', data.user_data_new_password),
-        ],
-        ids=['email', 'name', 'password'],
-    )
-    def test_change_user_auth_user_change_field_return_success_true(
-        self, login_user, field, new_value, request
-    ):
-        allure.dynamic.title(
-            f'Изменение пользователя - для авторизованного пользователя '
-            f'изменение поля {request.node.callspec.id} возвращает true в success'
-        )
-        payload = {field: new_value}
-        response = requests.patch(
-            CHANGE_USER,
-            json=payload,
-            headers={'Authorization': login_user['response'].json()['accessToken']},
-        )
-
-        assert response.json()['success'] is True
-
-
-    @pytest.mark.parametrize(
-        'field, new_value',
-        [
-            ('email', data.user_data_new_email),
-            ('name', data.user_data_new_name),
-            ('password', data.user_data_new_password),
-        ],
-        ids=['email', 'name', 'password'],
-    )
-    def test_change_user_auth_user_change_field_return_correct_user_email(
-        self, login_user, field, new_value, request
-    ):
-        allure.dynamic.title(
-            f'Изменение пользователя - для авторизованного пользователя '
-            f'изменение поля {request.node.callspec.id} возвращает корректное сообщение'
+            f'успешное изменение поля {request.node.callspec.id}'
         )
         payload = {field: new_value}
         response = requests.patch(
@@ -84,36 +32,13 @@ class TestChangeUser:
         correct_email = (
             new_value if field == 'email' else login_user['login_pass']['email']
         )
-
-        assert response.json()['user']['email'] == correct_email
-
-
-    @pytest.mark.parametrize(
-        'field, new_value',
-        [
-            ('email', data.user_data_new_email),
-            ('name', data.user_data_new_name),
-            ('password', data.user_data_new_password),
-        ],
-        ids=['email', 'name', 'password'],
-    )
-    def test_change_user_auth_user_change_field_return_correct_user_name(
-        self, login_user, field, new_value, request
-    ):
-        allure.dynamic.title(
-            f'Изменение пользователя - для авторизованного пользователя '
-            f'изменение поля {request.node.callspec.id} возвращает user_name'
-        )
-        payload = {field: new_value}
-        response = requests.patch(
-            CHANGE_USER,
-            json=payload,
-            headers={'Authorization': login_user['response'].json()['accessToken']},
-        )
         correct_name = (
             new_value if field == 'name' else login_user['login_pass']['name']
         )
 
+        assert response.status_code == 200
+        assert response.json()['success'] is True
+        assert response.json()['user']['email'] == correct_email
         assert response.json()['user']['name'] == correct_name
 
 
@@ -126,7 +51,7 @@ class TestChangeUser:
         ],
         ids=['email', 'name', 'password'],
     )
-    def test_change_user_auth_user_change_field_login_with_new_data_return_200(
+    def test_change_user_auth_user_change_field_success_login_with_new_data(
         self, login_user, field, new_value, request
     ):
         allure.dynamic.title(
@@ -159,58 +84,19 @@ class TestChangeUser:
         ],
         ids=['email', 'name', 'password'],
     )
-    def test_change_user_unauth_user_change_field_return_401(
+    def test_change_user_for_unauth_user_return_error(
         self, field, new_value, request
     ):
         allure.dynamic.title(
             f'Изменение пользователя - для неавторизованного пользователя '
-            f'изменение поля {request.node.callspec.id} возвращает 401'
+            f'изменение поля {request.node.callspec.id} возвращает ошибку'
         )
         payload = {field: new_value}
         response = requests.patch(CHANGE_USER, json=payload)
 
         assert response.status_code == 401
-
-
-    @pytest.mark.parametrize(
-        'field, new_value',
-        [
-            ('email', data.user_data_new_email),
-            ('name', data.user_data_new_name),
-            ('password', data.user_data_new_password),
-        ],
-        ids=['email', 'name', 'password'],
-    )
-    def test_change_user_unauth_user_change_field_return_success_false(
-        self, field, new_value, request
-    ):
-        allure.dynamic.title(
-            f'Изменение пользователя - для неавторизованного пользователя '
-            f'изменение поля {request.node.callspec.id} возвращает false в success'
-        )
-        payload = {field: new_value}
-        response = requests.patch(CHANGE_USER, json=payload)
-
         assert response.json()['success'] is False
-
-
-    @pytest.mark.parametrize(
-        'field, new_value',
-        [
-            ('email', data.user_data_new_email),
-            ('name', data.user_data_new_name),
-            ('password', data.user_data_new_password),
-        ],
-        ids=['email', 'name', 'password'],
-    )
-    def test_change_user_unauth_user_change_field_return_correct_message(
-        self, field, new_value, request
-    ):
-        allure.dynamic.title(
-            f'Изменение пользователя - для неавторизованного пользователя '
-            f'изменение поля {request.node.callspec.id} возвращает корректное сообщение'
-        )
-        payload = {field: new_value}
-        response = requests.patch(CHANGE_USER, json=payload)
-
         assert response.json()['message'] == 'You should be authorised'
+
+
+        
